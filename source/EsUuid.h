@@ -7,11 +7,13 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef ES_UUID_H_
-#define ES_UUID_H_
+#pragma once
 
 #include <memory>
 #include <string>
@@ -38,10 +40,10 @@ public:
 		UuidType &operator=(const UuidType &other) { return *this = UuidType(other); }
 #if defined(_WIN32)
 		UuidType(const UuidType &other) = default;
-		UUID id;
+		UUID id = {};
 #else
 		UuidType(const UuidType &other) { uuid_copy(id, other.id); }
-		uuid_t id;
+		uuid_t id = {};
 #endif
 	};
 
@@ -52,7 +54,7 @@ public:
 	~EsUuid() noexcept = default;
 	// Copying a UUID does not copy its value. (This allows us to use simple copy operations on stock
 	// ship definitions when spawning fleets, etc.)
-	EsUuid(const EsUuid &other) noexcept : value() {};
+	EsUuid(const EsUuid &other) noexcept : value{} {};
 	// Copy-assigning also results in an empty UUID.
 	EsUuid &operator=(const EsUuid &other) noexcept { return *this = EsUuid(other); };
 	// UUIDs can be move-constructed as-is.
@@ -101,7 +103,3 @@ struct UUIDComparator {
 	// No comparator for collections of T, as std containers generally perform copy operations
 	// and copying this class will eventually be disabled.
 };
-
-
-
-#endif

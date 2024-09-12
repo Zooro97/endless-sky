@@ -7,11 +7,15 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOCATION_FILTER_H_
-#define LOCATION_FILTER_H_
+#pragma once
+
+#include "DistanceCalculationSettings.h"
 
 #include <list>
 #include <set>
@@ -35,7 +39,7 @@ class LocationFilter {
 public:
 	LocationFilter() noexcept = default;
 	// Construct and Load() at the same time.
-	LocationFilter(const DataNode &node);
+	explicit LocationFilter(const DataNode &node);
 
 	// Examine all the children of the given node and load any that are filters.
 	void Load(const DataNode &node);
@@ -73,6 +77,8 @@ private:
 
 
 private:
+	bool isEmpty = true;
+
 	// The planet must satisfy these conditions:
 	std::set<const Planet *> planets;
 	// It must have at least one attribute from each set in this list:
@@ -85,9 +91,11 @@ private:
 	const System *center = nullptr;
 	int centerMinDistance = 0;
 	int centerMaxDistance = 1;
+	DistanceCalculationSettings centerDistanceOptions;
 	// Distance limits used in a "distance" filter.
 	int originMinDistance = 0;
 	int originMaxDistance = -1;
+	DistanceCalculationSettings originDistanceOptions;
 
 	// At least one of the outfits from each set must be available
 	// (to purchase or plunder):
@@ -100,7 +108,3 @@ private:
 	// These filters store all the things the planet or system must border.
 	std::list<LocationFilter> neighborFilters;
 };
-
-
-
-#endif

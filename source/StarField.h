@@ -7,11 +7,13 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef STAR_FIELD_H_
-#define STAR_FIELD_H_
+#pragma once
 
 #include "Shader.h"
 
@@ -22,6 +24,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 class Body;
 class Point;
 class Sprite;
+class System;
 
 
 
@@ -36,7 +39,7 @@ public:
 	void Init(int stars, int width);
 	void SetHaze(const Sprite *sprite, bool allowAnimation);
 
-	void Draw(const Point &pos, const Point &vel, double zoom = 1.) const;
+	void Draw(const Point &pos, const Point &vel, double zoom = 1., const System *system = nullptr) const;
 
 
 private:
@@ -68,7 +71,3 @@ private:
 	GLuint translateI;
 	GLuint brightnessI;
 };
-
-
-
-#endif

@@ -7,14 +7,39 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "Information.h"
 
-#include "Sprite.h"
+#include "image/Sprite.h"
 
 using namespace std;
+
+
+
+void Information::SetRegion(const Rectangle &rect)
+{
+	region = rect;
+	hasCustomRegion = true;
+}
+
+
+
+const Rectangle &Information::GetCustomRegion() const
+{
+	return region;
+}
+
+
+
+bool Information::HasCustomRegion() const
+{
+	return hasCustomRegion;
+}
 
 
 
@@ -113,7 +138,7 @@ bool Information::HasCondition(const string &condition) const
 	if(condition.front() == '!')
 		return !HasCondition(condition.substr(1));
 
-	return conditions.count(condition);
+	return conditions.contains(condition);
 }
 
 

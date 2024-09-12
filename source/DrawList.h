@@ -7,11 +7,13 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAW_LIST_H_
-#define DRAW_LIST_H_
+#pragma once
 
 #include "Point.h"
 #include "SpriteShader.h"
@@ -43,7 +45,7 @@ public:
 	// Add an object that should not be drawn with motion blur.
 	bool AddUnblurred(const Body &body);
 	// Add an object using a specific swizzle (rather than its own).
-	bool AddSwizzled(const Body &body, int swizzle);
+	bool AddSwizzled(const Body &body, int swizzle, double cloak = 0.);
 
 	// Draw all the items in this list.
 	void Draw() const;
@@ -53,7 +55,7 @@ private:
 	// Determine if the given object should be drawn at all.
 	bool Cull(const Body &body, const Point &position, const Point &blur) const;
 
-	void Push(const Body &body, Point pos, Point blur, double cloak, double clip, int swizzle);
+	void Push(const Body &body, Point pos, Point blur, double cloak, int swizzle);
 
 
 private:
@@ -65,7 +67,3 @@ private:
 	Point center;
 	Point centerVelocity;
 };
-
-
-
-#endif

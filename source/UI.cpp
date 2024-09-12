@@ -7,7 +7,10 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "UI.h"
@@ -41,11 +44,11 @@ bool UI::Handle(const SDL_Event &event)
 		if(event.type == SDL_MOUSEMOTION)
 		{
 			if(event.motion.state & SDL_BUTTON(1))
-				handled = (*it)->Drag(
+				handled = (*it)->DoDrag(
 					event.motion.xrel * 100. / Screen::Zoom(),
 					event.motion.yrel * 100. / Screen::Zoom());
 			else
-				handled = (*it)->Hover(
+				handled = (*it)->DoHover(
 					Screen::Left() + event.motion.x * 100 / Screen::Zoom(),
 					Screen::Top() + event.motion.y * 100 / Screen::Zoom());
 		}
@@ -57,23 +60,23 @@ bool UI::Handle(const SDL_Event &event)
 			{
 				handled = (*it)->ZoneClick(Point(x, y));
 				if(!handled)
-					handled = (*it)->Click(x, y, event.button.clicks);
+					handled = (*it)->DoClick(x, y, event.button.clicks);
 			}
 			else if(event.button.button == 3)
-				handled = (*it)->RClick(x, y);
+				handled = (*it)->DoRClick(x, y);
 		}
 		else if(event.type == SDL_MOUSEBUTTONUP)
 		{
 			int x = Screen::Left() + event.button.x * 100 / Screen::Zoom();
 			int y = Screen::Top() + event.button.y * 100 / Screen::Zoom();
-			handled = (*it)->Release(x, y);
+			handled = (*it)->DoRelease(x, y);
 		}
 		else if(event.type == SDL_MOUSEWHEEL)
-			handled = (*it)->Scroll(event.wheel.x, event.wheel.y);
+			handled = (*it)->DoScroll(event.wheel.x, event.wheel.y);
 		else if(event.type == SDL_KEYDOWN)
 		{
 			Command command(event.key.keysym.sym);
-			handled = (*it)->KeyDown(event.key.keysym.sym, event.key.keysym.mod, command, !event.key.repeat);
+			handled = (*it)->DoKeyDown(event.key.keysym.sym, event.key.keysym.mod, command, !event.key.repeat);
 		}
 
 		// If this panel does not want anything below it to receive events, do
@@ -99,9 +102,6 @@ void UI::StepAll()
 	// Step all the panels.
 	for(shared_ptr<Panel> &panel : stack)
 		panel->Step();
-
-	// Handle any queud panels added by another panel.
-	PushOrPop();
 }
 
 
@@ -121,7 +121,7 @@ void UI::DrawAll()
 			break;
 
 	for( ; it != stack.end(); ++it)
-		(*it)->Draw();
+		(*it)->DoDraw();
 }
 
 
@@ -136,8 +136,8 @@ void UI::Push(Panel *panel)
 
 void UI::Push(const shared_ptr<Panel> &panel)
 {
-	panel->SetUI(this);
 	toPush.push_back(panel);
+	panel->SetUI(this);
 }
 
 
@@ -148,6 +148,19 @@ void UI::Push(const shared_ptr<Panel> &panel)
 void UI::Pop(const Panel *panel)
 {
 	toPop.push_back(panel);
+}
+
+
+
+// Remove the given panel and every panel that is higher in the stack.
+void UI::PopThrough(const Panel *panel)
+{
+	for(auto it = stack.rbegin(); it != stack.rend(); ++it)
+	{
+		toPop.push_back(it->get());
+		if(it->get() == panel)
+			break;
+	}
 }
 
 
@@ -273,9 +286,13 @@ void UI::PushOrPop()
 		for(auto it = stack.begin(); it != stack.end(); ++it)
 			if(it->get() == panel)
 			{
-				it = stack.erase(it);
+				stack.erase(it);
 				break;
 			}
 	}
 	toPop.clear();
+
+	// Each panel potentially has its own children, which could be modified.
+	for(auto &panel : stack)
+		panel->AddOrRemove();
 }

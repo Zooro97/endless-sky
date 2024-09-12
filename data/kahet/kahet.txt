@@ -6,7 +6,10 @@
 #
 # Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-# PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <https://www.gnu.org/licenses/>.
 
 # Ship names:
 phrase "ka'het"
@@ -155,6 +158,14 @@ phrase "ka'mar"
 	word
 		"'mar"
 
+phrase "ka'sei"
+	phrase
+		"builder beginning"
+	word
+		"'sei"
+
+
+
 # Hails:
 phrase "friendly ka'het"
 	word
@@ -269,11 +280,8 @@ phrase "friendly ka'het"
 		""
 		"1"
 		"2"
-		"3"
-		"3"
-		"3"
-		"4"
-		"4"
+		"3" 3
+		"4" 2
 	phrase
 		"digit"
 	phrase
@@ -321,9 +329,7 @@ phrase "friendly ka'het"
 		". Estimated signal strength: "
 	word
 		"8"
-		"9"
-		"9"
-		"9"
+		"9" 3
 	phrase
 		"digit"
 	word
@@ -599,6 +605,8 @@ phrase "hostile disabled ka'het"
 	word
 		"."
 
+
+
 fleet "Ka'het"
 	government "Ka'het"
 	names "ka'het"
@@ -772,6 +780,17 @@ fleet "Builders Drone"
 		"Selii'mar" 3
 		"Faes'mar" 2
 		"Faes'mar (Strong)"
+
+fleet "Ka'sei"
+	government "Ka'sei"
+	names "ka'sei"
+	cargo 1
+	personality
+		plunders mining harvests
+	variant
+		"Fetri'sei"
+	variant
+		"Fetri'sei (Disable-able)"
 
 
 

@@ -7,14 +7,17 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "TextReplacements.h"
 
 #include "ConditionSet.h"
+#include "ConditionsStore.h"
 #include "DataNode.h"
-#include "PlayerInfo.h"
 
 #include <set>
 
@@ -28,7 +31,7 @@ void TextReplacements::Load(const DataNode &node)
 	// Check for reserved keys. Only some hardcoded replacement keys are
 	// reserved, as these ones are done on the fly after all other replacements
 	// have been done.
-	const set<string> reserved = {"<first>", "<last>", "<ship>"};
+	const set<string> reserved = {"<first>", "<last>", "<ship>", "<model>"};
 
 	for(const DataNode &child : node)
 	{
@@ -54,7 +57,7 @@ void TextReplacements::Load(const DataNode &node)
 			key += ">";
 			child.PrintTrace("Warning: text replacements must be suffixed by \">\":");
 		}
-		if(reserved.count(key))
+		if(reserved.contains(key))
 		{
 			child.PrintTrace("Skipping reserved substitution key:");
 			continue;
@@ -76,10 +79,10 @@ void TextReplacements::Revert(TextReplacements &other)
 
 
 
-// Add new text replacements to the given map after evaltuating all possible replacements.
+// Add new text replacements to the given map after evaluating all possible replacements.
 // This text replacement will overwrite the value of any existing keys in the given map
 // if the map and this TextReplacements share a key.
-void TextReplacements::Substitutions(map<string, string> &subs, const map<string, int64_t> &conditions) const
+void TextReplacements::Substitutions(map<string, string> &subs, const ConditionsStore &conditions) const
 {
 	for(const auto &sub : substitutions)
 	{

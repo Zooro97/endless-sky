@@ -7,11 +7,13 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef PERSON_H_
-#define PERSON_H_
+#pragma once
 
 #include "LocationFilter.h"
 #include "Personality.h"
@@ -21,6 +23,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <memory>
 
 class DataNode;
+class FormationPattern;
 class Government;
 class Ship;
 class System;
@@ -33,6 +36,8 @@ public:
 	void Load(const DataNode &node);
 	// Finish loading all the ships in this person specification.
 	void FinishLoading();
+	// Prevent this person from being spawned in any system.
+	void NeverSpawn();
 
 	// Find out how often this person should appear in the given system. If this
 	// person is dead or already active, this will return zero.
@@ -61,11 +66,8 @@ private:
 	int frequency = 100;
 
 	std::list<std::shared_ptr<Ship>> ships;
+	const FormationPattern *formationPattern = nullptr;
 	const Government *government = nullptr;
 	Personality personality;
 	Phrase hail;
 };
-
-
-
-#endif

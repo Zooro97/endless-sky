@@ -7,15 +7,18 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef SHIP_INFO_PANEL_H_
-#define SHIP_INFO_PANEL_H_
+#pragma once
 
 #include "Panel.h"
 
 #include "ClickZone.h"
+#include "InfoPanelState.h"
 #include "Point.h"
 #include "ShipInfoDisplay.h"
 
@@ -37,7 +40,8 @@ class Rectangle;
 // hardpoints. In flight, this panel allows them to jettison cargo.
 class ShipInfoPanel : public Panel {
 public:
-	explicit ShipInfoPanel(PlayerInfo &player, int index = -1);
+	explicit ShipInfoPanel(PlayerInfo &player);
+	explicit ShipInfoPanel(PlayerInfo &player, InfoPanelState state);
 
 	virtual void Step() override;
 	virtual void Draw() override;
@@ -91,15 +95,12 @@ private:
 	// currently being dragged.
 	int hoverIndex = -1;
 	int draggingIndex = -1;
+
+	InfoPanelState panelState;
+
 	// Track the current mouse location.
 	Point hoverPoint;
-	// You can only make changes to ships when landed on a planet.
-	bool canEdit = false;
 	// Track whether a commodity or plundered outfit is selected to jettison.
 	std::string selectedCommodity;
 	const Outfit *selectedPlunder = nullptr;
 };
-
-
-
-#endif
